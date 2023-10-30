@@ -30,12 +30,14 @@ def getItemList(info):
         description = item['description']
         description = re.sub(regex, "", description).lower()
         description = re.sub(single_char_regex, "", description)
-        description = description.split(' ')[len(description.split(' ')) - 1]
-        print(description)
-        # Ensure there are no duplicates
-        if description not in description_list:
-            description_list.append(description)
-    
+        description_parts = description.split(' ')
+        for i in range(len(description_parts)-1, 0, -1):
+                part = description_parts[i:]
+                part = ' '.join(part)
+                # Ensure there are no duplicates
+                if part not in description_list:
+                    description_list.append(part)
+    print(description_list)
     return description_list
 
 
@@ -43,11 +45,3 @@ def removeStopWords(description_list):
       stop_words = set(stopwords.words('english'))
       filtered_sentence = [item for item in description_list if not item in stop_words]
       return filtered_sentence
-
-
-
-#regex = "\[(.*, )*.*(, .*)*WORD(, .*)*'(, .*)*\]"
-
-
-
-createRegex()
