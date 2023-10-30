@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+
 def createRegex(words):
     # words = ["tomato", "orange", "banana"]
     length = len(words)
@@ -11,6 +12,8 @@ def createRegex(words):
     regex += "\]"
     print(regex)
     return regex
+
+
 input = ['lettuce','oil']
 data = pd.read_csv('RAW_recipes.csv')
 recommend = []
