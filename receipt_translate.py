@@ -46,3 +46,8 @@ def removeStopWords(description_list):
 
 
 
+#regex = "\[(.*, )*.*(, .*)*WORD(, .*)*'(, .*)*\]"
+
+
+
+createRegex()

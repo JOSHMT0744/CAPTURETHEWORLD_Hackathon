@@ -36,3 +36,15 @@ print(recommend)
 print(df)
 # \[(.*, )*.*tomato(, .*)*egg(, .*)*\]
 
+
+def createRegex():
+    words = ["tomato", "orange", "banana"]
+    length = len(words)
+    string_words = (','.join(str(x) for x in words)).replace('[', '').replace(']', '').replace(',', '|')
+    #print(string_words)
+    regex = "\["
+    for i in range(length):
+        regex += "(.*(, .*)*({})(, .*)*)+".format(string_words)
+    regex += "\]"
+    print(regex)
+    return regex
