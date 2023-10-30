@@ -30,6 +30,7 @@ def getItemList(info):
         description = item['description']
         description = re.sub(regex, "", description).lower()
         description = re.sub(single_char_regex, "", description)
+        description = description.split(' ')[len(description.split(' ')) - 1]
         print(description)
         # Ensure there are no duplicates
         if description not in description_list:
