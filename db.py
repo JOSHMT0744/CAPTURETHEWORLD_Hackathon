@@ -1,52 +1,44 @@
 import pandas as pd
 import re
+import zipfile
 
 def createRegex(words):
     # words = ["tomato", "orange", "banana"]
     length = len(words)
     string_words = (','.join(str(x) for x in words)).replace('[', '').replace(']', '').replace(',', '|')
     #print(string_words)
-    regex = "\["
+    regex = "\[(')*"
     for i in range(length):
-        regex += "(.*(, .*)*'.*({})'(, .*)*)+".format(string_words)
+        regex += "(.*(, '.*')*'.*({})'(, '.*')*)+".format(string_words)
     regex += "\]"
     print(regex)
     return regex
 
-
-input = ['lettuce','oil']
-data = pd.read_csv('RAW_recipes.csv')
-recommend = []
-i=0
-normal_reg = "\[(.*, )*.*'(, .*)*"+input[i]+"(, .*)*'(, .*)*\]"
-# print(recommend)
-# print(data['ingredients'][0])
-# print(normal_reg)
-# print(type(data['ingredients'][0]))
-# if bool(re.search(normal_reg, str(data['ingredients'][0]))):
-#     print('true')
-# else:
-#     print('false')
-# test = "['winter squash', 'mexican seasoning', 'mixed spice', 'honey', 'butter', 'olive oil', 'salt']"
-# if bool(re.search(normal_reg, test)):
-#     print('true')
-# else:
-#     print('false')
-regex_string = createRegex(input)
-d = {'name':[], 'id':[], "steps":[], "description":[],"ingredients":[]}
-df = pd.DataFrame(data = d)
-for i in range(len(data['ingredients'][i])):
-    if bool(re.search(regex_string, data['ingredients'][i])):
-        re.search(regex_string, data['ingredients'][i])
-        recommend.append(data['id'][i])
-        print(data['ingredients'][i])
-        # df.append({'name':data['name'][i]})
-        # df.append({'id': data['id'][i]})
-        # df.append({'steps': data['steps'][i]})
-        # df.append({'description': data['description'][i]})
-        # df.append({'ingredients': data['ingredients'][i]})
-        #pd.concat([pd.DataFrame(data['name'][i], columns=['name'])], ignore_index=True)
-print(recommend)
-print(df)
-# \[(.*, )*.*tomato(, .*)*egg(, .*)*\]
+def findRecipes(input):
+    input = ['lettuce','oil']
+    with zipfile.ZipFile('csv_files.zip', 'r') as myzip:
+        with myzip.open('archive/RAW_recipes.csv') as myfile:
+            data = pd.read_csv(myfile)
+    recommend = []
+    i=0
+    regex_string = createRegex(input)
+    d = {'name':[], 'id':[], "steps":[], "description":[],"ingredients":[], "ingredient_count":[]}
+    df = pd.DataFrame(data = d)
+    i = 0
+    count = 6 # Number of recipes to find
+    while i < len(data['ingredients']) and count != 0:
+        ingredient_list = data['ingredients'][i]
+        if bool(re.search(regex_string, ingredient_list)):
+            re.search(regex_string, ingredient_list)
+            num_ingred = len(ingredient_list)
+            recommend.append(data['id'][i])
+            print(ingredient_list)
+            new_row = {'name':data['name'][i], 'id': data['id'][i], 'steps': data['steps'][i], 'description': data['description'][i], 'ingredients': data['ingredients'][i], 'ingredient_count': num_ingred}
+            df.loc[len(df)] = new_row        
+            count -= 1
+        i += 1
+    print(recommend)
+    print(df)
+    top_3 = df.sort_values(by=['ingredient_count'], ascending=False).head(3)
+    return top_3
 
