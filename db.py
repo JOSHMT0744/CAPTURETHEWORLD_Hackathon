@@ -26,12 +26,13 @@ for i in range(len(data['ingredients'][i])):
         re.search(normal_reg, data['ingredients'][i])
         recommend.append(data['id'][i])
         print(data['ingredients'][i])
-        df.append({'name':data['name'][i]})
-        df.append({'id': data['id'][i]})
-        df.append({'steps': data['steps'][i]})
-        df.append({'description': data['description'][i]})
-        df.append({'ingredients': data['ingredients'][i]})
-
+        # df.append({'name':data['name'][i]})
+        # df.append({'id': data['id'][i]})
+        # df.append({'steps': data['steps'][i]})
+        # df.append({'description': data['description'][i]})
+        # df.append({'ingredients': data['ingredients'][i]})
+        #pd.concat([pd.DataFrame(data['name'][i], columns=['name'])], ignore_index=True)
 print(recommend)
 print(df)
 # \[(.*, )*.*tomato(, .*)*egg(, .*)*\]
+
