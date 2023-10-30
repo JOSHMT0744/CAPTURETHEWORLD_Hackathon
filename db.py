@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import zipfile
+import time
 
 def createRegex(words):
     # words = ["tomato", "orange", "banana"]
@@ -15,7 +16,7 @@ def createRegex(words):
     return regex
 
 def findRecipes(input):
-    input = ['lettuce','oil']
+    timeout = time.time() + 60*2
     with zipfile.ZipFile('csv_files.zip', 'r') as myzip:
         with myzip.open('archive/RAW_recipes.csv') as myfile:
             data = pd.read_csv(myfile)
@@ -36,6 +37,8 @@ def findRecipes(input):
             new_row = {'name':data['name'][i], 'id': data['id'][i], 'steps': data['steps'][i], 'description': data['description'][i], 'ingredients': data['ingredients'][i], 'ingredient_count': num_ingred}
             df.loc[len(df)] = new_row        
             count -= 1
+        if time.time() > timeout: # To prevent loop lasting too long
+            break
         i += 1
     print(recommend)
     print(df)
