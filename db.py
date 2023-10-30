@@ -1,6 +1,17 @@
 import pandas as pd
 import re
-input = ['honey']
+def createRegex(words):
+    # words = ["tomato", "orange", "banana"]
+    length = len(words)
+    string_words = (','.join(str(x) for x in words)).replace('[', '').replace(']', '').replace(',', '|')
+    #print(string_words)
+    regex = "\["
+    for i in range(length):
+        regex += "(.*(, .*)*'.*({})'(, .*)*)+".format(string_words)
+    regex += "\]"
+    print(regex)
+    return regex
+input = ['lettuce','oil']
 data = pd.read_csv('RAW_recipes.csv')
 recommend = []
 i=0
@@ -18,12 +29,12 @@ normal_reg = "\[(.*, )*.*'(, .*)*"+input[i]+"(, .*)*'(, .*)*\]"
 #     print('true')
 # else:
 #     print('false')
+regex_string = createRegex(input)
 d = {'name':[], 'id':[], "steps":[], "description":[],"ingredients":[]}
 df = pd.DataFrame(data = d)
-print(df)
 for i in range(len(data['ingredients'][i])):
-    if bool(re.search(normal_reg, data['ingredients'][i])):
-        re.search(normal_reg, data['ingredients'][i])
+    if bool(re.search(regex_string, data['ingredients'][i])):
+        re.search(regex_string, data['ingredients'][i])
         recommend.append(data['id'][i])
         print(data['ingredients'][i])
         # df.append({'name':data['name'][i]})
@@ -36,15 +47,3 @@ print(recommend)
 print(df)
 # \[(.*, )*.*tomato(, .*)*egg(, .*)*\]
 
-
-def createRegex():
-    words = ["tomato", "orange", "banana"]
-    length = len(words)
-    string_words = (','.join(str(x) for x in words)).replace('[', '').replace(']', '').replace(',', '|')
-    #print(string_words)
-    regex = "\["
-    for i in range(length):
-        regex += "(.*(, .*)*({})(, .*)*)+".format(string_words)
-    regex += "\]"
-    print(regex)
-    return regex
